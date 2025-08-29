@@ -1,8 +1,10 @@
 require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
-const cron = require('node-cron');
 const { generateAnimePost } = require('./postGenerator');
 const fs = require('fs');
+
+console.log('🚀 Anime Bot Starting...');
+console.log('🎨 Preparing AI magic...');
 
 // Bot configuration
 const token = process.env.TELEGRAM_BOT_TOKEN;
@@ -85,34 +87,19 @@ async function postToChannel() {
     }
 }
 
-// Manual posting function for testing
-async function testPost() {
-    console.log('🧪 Testing post generation and sending...');
+// Main function - just post and finish
+async function main() {
+    console.log(`📢 Posting to: ${channelId}`);
+    console.log('🎯 Generating amazing content...');
+    
     await postToChannel();
-}
-
-// Schedule posts
-function startScheduledPosting() {
-    console.log('🚀 Starting Anime Posting Bot...');
-    console.log(`📢 Channel: ${channelId}`);
     
-    // Post every 4 hours (adjust as needed)
-    cron.schedule('0 */4 * * *', () => {
-        console.log('⏰ Scheduled post triggered');
-        postToChannel();
-    });
-    
-    console.log('⏰ Scheduled to post every 4 hours');
-    console.log('🎯 Bot is running! Press Ctrl+C to stop');
+    console.log('🎉 Post sent successfully!');
+    console.log('✨ Bot finished! You can stop it now.');
 }
 
-// Command line arguments
-const args = process.argv.slice(2);
-
-if (args.includes('--test')) {
-    testPost();
-} else if (args.includes('--once')) {
-    postToChannel().then(() => process.exit(0));
-} else {
-    startScheduledPosting();
-}
+// Start the bot immediately
+main().catch(error => {
+    console.error('❌ Bot failed:', error.message);
+    process.exit(1);
+});

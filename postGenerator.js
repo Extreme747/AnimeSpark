@@ -224,13 +224,147 @@ ${poll.options.map((option, index) =>
     };
 }
 
+// Generate anime facts posts
+async function generateAnimeFacts() {
+    const anime = getRandomItem(['doraemon', 'shinchan']);
+    const fact = getRandomItem(animeDatabase[anime].facts);
+    
+    const emojis = ['💡', '🤯', '📚', '🔍', '✨', '🎯'];
+    const selectedEmoji = getRandomItem(emojis);
+    
+    const animeName = anime === 'doraemon' ? 'Doraemon' : 'Shinchan';
+    
+    const text = `${selectedEmoji} *${escapeMarkdownV2(fact.title)}*
+
+${escapeMarkdownV2(fact.content)}
+
+Mind\\-blown na\\? ${getRandomItem(['🤯', '😱', '🔥'])} 
+
+_Share this amazing fact\\!_ 📤`;
+
+    const textHTML = `${selectedEmoji} <b>${fact.title}</b>
+
+${fact.content}
+
+Mind-blown na? ${getRandomItem(['🤯', '😱', '🔥'])} 
+
+<i>Share this amazing fact!</i> 📤`;
+
+    // Generate AI image for facts
+    const imagePrompt = `${animeName} characters discovering amazing facts, educational scene, light bulb moment, knowledge sharing`;
+    const imagePath = path.join(imagesDir, `facts_${Date.now()}.png`);
+    const generatedImage = await generateAnimeImage(imagePrompt, animeName, imagePath);
+
+    return {
+        type: 'Anime Facts',
+        text: text,
+        textHTML: textHTML,
+        anime: anime,
+        imagePath: generatedImage,
+        imageCaption: generatedImage ? await generateImageCaption(animeName, 'facts', fact.title) : null
+    };
+}
+
+// Generate anime stories posts
+async function generateAnimeStories() {
+    const anime = getRandomItem(['doraemon', 'shinchan']);
+    const story = getRandomItem(animeDatabase[anime].stories);
+    
+    const emojis = ['📖', '🎭', '💫', '🌟', '🎪', '📝'];
+    const selectedEmoji = getRandomItem(emojis);
+    
+    const animeName = anime === 'doraemon' ? 'Doraemon' : 'Shinchan';
+    
+    const text = `${selectedEmoji} *${escapeMarkdownV2(animeName)} Story Time\\!*
+
+*${escapeMarkdownV2(story.title)}*
+
+${escapeMarkdownV2(story.content)}
+
+Kya interesting story hai na\\? ${getRandomItem(['😍', '🥺', '💕'])} 
+
+_Tag your anime\\-loving friends\\!_ 👥`;
+
+    const textHTML = `${selectedEmoji} <b>${animeName} Story Time!</b>
+
+<b>${story.title}</b>
+
+${story.content}
+
+Kya interesting story hai na? ${getRandomItem(['😍', '🥺', '💕'])} 
+
+<i>Tag your anime-loving friends!</i> 👥`;
+
+    // Generate AI image for stories
+    const imagePrompt = `${animeName} characters in storytelling scene, emotional moment, flashback style, nostalgic atmosphere`;
+    const imagePath = path.join(imagesDir, `stories_${Date.now()}.png`);
+    const generatedImage = await generateAnimeImage(imagePrompt, animeName, imagePath);
+
+    return {
+        type: 'Anime Stories',
+        text: text,
+        textHTML: textHTML,
+        anime: anime,
+        imagePath: generatedImage,
+        imageCaption: generatedImage ? await generateImageCaption(animeName, 'story', story.title) : null
+    };
+}
+
+// Generate anime news posts
+async function generateAnimeNews() {
+    const anime = getRandomItem(['doraemon', 'shinchan']);
+    const news = getRandomItem(animeDatabase[anime].news);
+    
+    const emojis = ['📰', '🔥', '⚡', '🚨', '📺', '🎬'];
+    const selectedEmoji = getRandomItem(emojis);
+    
+    const animeName = anime === 'doraemon' ? 'Doraemon' : 'Shinchan';
+    
+    const text = `${selectedEmoji} *${escapeMarkdownV2(animeName)} News Alert\\!*
+
+*${escapeMarkdownV2(news.title)}*
+
+${escapeMarkdownV2(news.content)}
+
+Kitna exciting hai yaar\\! ${getRandomItem(['🎉', '🔥', '🚀'])} 
+
+_Stay tuned for more updates\\!_ 📡`;
+
+    const textHTML = `${selectedEmoji} <b>${animeName} News Alert!</b>
+
+<b>${news.title}</b>
+
+${news.content}
+
+Kitna exciting hai yaar! ${getRandomItem(['🎉', '🔥', '🚀'])} 
+
+<i>Stay tuned for more updates!</i> 📡`;
+
+    // Generate AI image for news
+    const imagePrompt = `${animeName} characters reading news, exciting announcement, celebration scene, modern news broadcast style`;
+    const imagePath = path.join(imagesDir, `news_${Date.now()}.png`);
+    const generatedImage = await generateAnimeImage(imagePrompt, animeName, imagePath);
+
+    return {
+        type: 'Anime News',
+        text: text,
+        textHTML: textHTML,
+        anime: anime,
+        imagePath: generatedImage,
+        imageCaption: generatedImage ? await generateImageCaption(animeName, 'news', news.title) : null
+    };
+}
+
 // Main function to generate random anime posts
 async function generateAnimePost() {
     const postTypes = [
         generateEpisodeSummary,
         generateTrivia,
         generateTodayInHistory,
-        generatePoll
+        generatePoll,
+        generateAnimeFacts,
+        generateAnimeStories,
+        generateAnimeNews
     ];
     
     const randomGenerator = getRandomItem(postTypes);
@@ -243,5 +377,8 @@ module.exports = {
     generateTrivia,
     generateTodayInHistory,
     generatePoll,
+    generateAnimeFacts,
+    generateAnimeStories,
+    generateAnimeNews,
     escapeMarkdownV2
 };

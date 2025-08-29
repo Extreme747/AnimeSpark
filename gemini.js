@@ -26,7 +26,7 @@ async function enhanceAnimePost(baseContent, anime, postType) {
     }
 }
 
-// Generate custom anime images
+// Generate custom anime images with professional thumbnail quality
 async function generateAnimeImage(prompt, anime, outputPath) {
     try {
         // Create images directory if it doesn't exist
@@ -35,9 +35,13 @@ async function generateAnimeImage(prompt, anime, outputPath) {
             fs.mkdirSync(imageDir, { recursive: true });
         }
 
-        const enhancedPrompt = `Cute anime style illustration of ${anime} characters. ${prompt}. 
-        Bright colors, child-friendly, cartoon style similar to Japanese anime. 
-        High quality, vibrant, cheerful mood.`;
+        // Create professional thumbnail-style prompts
+        const enhancedPrompt = `Professional anime thumbnail artwork featuring ${anime} characters. ${prompt}. 
+        Style: Clean vector art, bold outlines, vibrant flat colors, YouTube thumbnail quality.
+        Requirements: Sharp details, no blur, clear character faces, bright lighting, 
+        simple background, professional digital art style, high contrast colors.
+        Quality: Premium illustration, crisp lines, perfect for social media posting.
+        Layout: Centered composition, eye-catching design, perfect for channel thumbnails.`;
 
         const response = await ai.models.generateContent({
             model: "gemini-2.0-flash-preview-image-generation",
@@ -61,7 +65,7 @@ async function generateAnimeImage(prompt, anime, outputPath) {
             if (part.inlineData && part.inlineData.data) {
                 const imageData = Buffer.from(part.inlineData.data, "base64");
                 fs.writeFileSync(outputPath, imageData);
-                console.log(`🎨 Generated image: ${outputPath}`);
+                console.log(`🎨 Generated professional thumbnail: ${outputPath}`);
                 return outputPath;
             }
         }

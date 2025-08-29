@@ -1,4 +1,7 @@
 const { animeDatabase, getRandomItem, formatDate } = require('./animeData');
+const { enhanceAnimePost, generateAnimeImage, generateImageCaption, generateCustomTrivia } = require('./gemini');
+const fs = require('fs');
+const path = require('path');
 
 // Escape special characters for Telegram MarkdownV2
 function escapeMarkdownV2(text) {
@@ -24,8 +27,14 @@ function escapeMarkdownV2(text) {
         .replace(/!/g, '\\!');
 }
 
+// Create images directory if it doesn't exist
+const imagesDir = path.join(__dirname, 'images');
+if (!fs.existsSync(imagesDir)) {
+    fs.mkdirSync(imagesDir);
+}
+
 // Generate different types of anime posts
-function generateEpisodeSummary() {
+async function generateEpisodeSummary() {
     const anime = getRandomItem(['doraemon', 'shinchan']);
     const episode = getRandomItem(animeDatabase[anime].episodes);
     
@@ -60,22 +69,33 @@ ${phrase} ${selectedEmojis[1]} Ye episode toh must-watch hai!
 
 <i>Comment your fav scene below!</i> 💭`;
 
+    // Generate AI image for this episode
+    const imagePrompt = `${animeName} episode scene: ${episode.summary}. Characters in action, vibrant colors.`;
+    const imagePath = path.join(imagesDir, `episode_${Date.now()}.png`);
+    const generatedImage = await generateAnimeImage(imagePrompt, animeName, imagePath);
+    
     return {
         type: 'Episode Summary',
         text: text,
         textHTML: textHTML,
-        anime: anime
+        anime: anime,
+        imagePath: generatedImage,
+        imageCaption: generatedImage ? await generateImageCaption(animeName, 'episode', episode.title) : null
     };
 }
 
-function generateTrivia() {
+async function generateTrivia() {
     const anime = getRandomItem(['doraemon', 'shinchan']);
-    const trivia = getRandomItem(animeDatabase[anime].trivia);
+    const animeName = anime === 'doraemon' ? 'Doraemon' : 'Shinchan';
+    
+    // Try to generate custom AI trivia, fallback to database
+    let trivia = await generateCustomTrivia(animeName);
+    if (!trivia) {
+        trivia = getRandomItem(animeDatabase[anime].trivia);
+    }
     
     const emojis = ['🧠', '🤔', '💡', '🎯', '🔥', '✨'];
     const selectedEmoji = getRandomItem(emojis);
-    
-    const animeName = anime === 'doraemon' ? 'Doraemon' : 'Shinchan';
     
     const text = `🧩 *${escapeMarkdownV2(animeName)} Trivia Time\\!* ${selectedEmoji}
 
@@ -99,15 +119,22 @@ C) ${trivia.options[2]}
 <i>Answer batao comments mein!</i> 🤓
 <i>Pata hai toh like karo!</i> ❤️`;
 
+    // Generate AI image for trivia
+    const imagePrompt = `${animeName} characters thinking, quiz time, question marks, bright educational scene`;
+    const imagePath = path.join(imagesDir, `trivia_${Date.now()}.png`);
+    const generatedImage = await generateAnimeImage(imagePrompt, animeName, imagePath);
+
     return {
         type: 'Trivia',
         text: text,
         textHTML: textHTML,
-        anime: anime
+        anime: anime,
+        imagePath: generatedImage,
+        imageCaption: generatedImage ? await generateImageCaption(animeName, 'trivia', trivia.question) : null
     };
 }
 
-function generateTodayInHistory() {
+async function generateTodayInHistory() {
     const anime = getRandomItem(['doraemon', 'shinchan']);
     const fact = getRandomItem(animeDatabase[anime].todayInHistory);
     
@@ -136,15 +163,22 @@ Kaafi interesting na? ${getRandomItem(['🤩', '😍', '🔥'])}
 
 <i>Share karo dosto ke saath!</i> 📤`;
 
+    // Generate AI image for history fact
+    const imagePrompt = `${animeName} historical moment, vintage style, celebrating anniversary, nostalgic scene`;
+    const imagePath = path.join(imagesDir, `history_${Date.now()}.png`);
+    const generatedImage = await generateAnimeImage(imagePrompt, animeName, imagePath);
+
     return {
         type: 'Today in History',
         text: text,
         textHTML: textHTML,
-        anime: anime
+        anime: anime,
+        imagePath: generatedImage,
+        imageCaption: generatedImage ? await generateImageCaption(animeName, 'history', fact.content) : null
     };
 }
 
-function generatePoll() {
+async function generatePoll() {
     const anime = getRandomItem(['doraemon', 'shinchan']);
     const poll = getRandomItem(animeDatabase[anime].polls);
     
@@ -175,16 +209,23 @@ ${poll.options.map((option, index) =>
 <i>Vote karo abhi!</i> 🚀
 <i>Tumhara choice kya hai?</i> 🤔`;
 
+    // Generate AI image for poll
+    const imagePrompt = `${animeName} characters voting, democracy, multiple choices, fun interactive scene`;
+    const imagePath = path.join(imagesDir, `poll_${Date.now()}.png`);
+    const generatedImage = await generateAnimeImage(imagePrompt, animeName, imagePath);
+
     return {
         type: 'Poll',
         text: text,
         textHTML: textHTML,
-        anime: anime
+        anime: anime,
+        imagePath: generatedImage,
+        imageCaption: generatedImage ? await generateImageCaption(animeName, 'poll', poll.question) : null
     };
 }
 
 // Main function to generate random anime posts
-function generateAnimePost() {
+async function generateAnimePost() {
     const postTypes = [
         generateEpisodeSummary,
         generateTrivia,
@@ -193,7 +234,7 @@ function generateAnimePost() {
     ];
     
     const randomGenerator = getRandomItem(postTypes);
-    return randomGenerator();
+    return await randomGenerator();
 }
 
 module.exports = {

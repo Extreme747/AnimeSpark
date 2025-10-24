@@ -363,6 +363,161 @@ Kitna exciting hai yaar! ${getRandomItem(['🎉', '🔥', '🚀'])}
     };
 }
 
+// Generate character quotes posts
+async function generateCharacterQuotes() {
+    const anime = getRandomItem(['doraemon', 'shinchan']);
+    const quote = getRandomItem(animeDatabase[anime].quotes);
+    
+    const emojis = ['💬', '🗣️', '💭', '✨', '🌟', '🎯'];
+    const selectedEmoji = getRandomItem(emojis);
+    
+    const animeName = anime === 'doraemon' ? 'Doraemon' : 'Shinchan';
+    
+    const text = `${selectedEmoji} *${escapeMarkdownV2(animeName)} Quote of the Day\\!*
+
+_"${escapeMarkdownV2(quote.quote)}"_
+
+\\- ${escapeMarkdownV2(quote.character)} 
+
+_${escapeMarkdownV2(quote.context)}_
+
+Kitna relatable hai na\\? ${getRandomItem(['😂', '🥺', '💯'])} 
+
+_Share with friends who need this\\!_ 🔥`;
+
+    const textHTML = `${selectedEmoji} <b>${animeName} Quote of the Day!</b>
+
+<i>"${quote.quote}"</i>
+
+- ${quote.character} 
+
+<i>${quote.context}</i>
+
+Kitna relatable hai na? ${getRandomItem(['😂', '🥺', '💯'])} 
+
+<i>Share with friends who need this!</i> 🔥`;
+
+    // Generate AI image for quotes
+    const imagePrompt = `${quote.character} from ${animeName} giving wise advice, inspirational scene, motivational poster style`;
+    const imagePath = path.join(imagesDir, `quotes_${Date.now()}.png`);
+    const generatedImage = await generateAnimeImage(imagePrompt, animeName, imagePath);
+
+    return {
+        type: 'Character Quotes',
+        text: text,
+        textHTML: textHTML,
+        anime: anime,
+        contentKey: `quotes_${anime}_${quote.character}_${quote.quote.substring(0, 20)}`,
+        imagePath: generatedImage,
+        imageCaption: generatedImage ? await generateImageCaption(animeName, 'quotes', quote.quote) : null
+    };
+}
+
+// Generate Would You Rather posts
+async function generateWouldYouRather() {
+    const anime = getRandomItem(['doraemon', 'shinchan']);
+    const scenario = getRandomItem(animeDatabase[anime].wouldYouRather);
+    
+    const animeName = anime === 'doraemon' ? 'Doraemon' : 'Shinchan';
+    
+    const text = `🤔 *Would You Rather\\?* ${scenario.emoji}
+
+*Option A:* ${escapeMarkdownV2(scenario.optionA)}
+
+*VS*
+
+*Option B:* ${escapeMarkdownV2(scenario.optionB)}
+
+Tum kya choose karoge\\? 🤷‍♂️
+
+_Comment mein batao\\: A ya B\\?_ 👇
+_Tag your friends\\!_ 🔥`;
+
+    const textHTML = `🤔 <b>Would You Rather?</b> ${scenario.emoji}
+
+<b>Option A:</b> ${scenario.optionA}
+
+<b>VS</b>
+
+<b>Option B:</b> ${scenario.optionB}
+
+Tum kya choose karoge? 🤷‍♂️
+
+<i>Comment mein batao: A ya B?</i> 👇
+<i>Tag your friends!</i> 🔥`;
+
+    // Generate AI image for would you rather
+    const imagePrompt = `${animeName} characters making tough choices, decision time, vs battle style, fun dilemma`;
+    const imagePath = path.join(imagesDir, `wyr_${Date.now()}.png`);
+    const generatedImage = await generateAnimeImage(imagePrompt, animeName, imagePath);
+
+    return {
+        type: 'Would You Rather',
+        text: text,
+        textHTML: textHTML,
+        anime: anime,
+        contentKey: `wyr_${anime}_${scenario.optionA.substring(0, 20)}`,
+        imagePath: generatedImage,
+        imageCaption: generatedImage ? await generateImageCaption(animeName, 'would you rather', scenario.optionA) : null
+    };
+}
+
+// Generate Mini Quiz posts
+async function generateMiniQuiz() {
+    const anime = getRandomItem(['doraemon', 'shinchan']);
+    const quiz = getRandomItem(animeDatabase[anime].miniQuiz);
+    
+    const emojis = ['🎓', '🧠', '❓', '🎯', '💡'];
+    const selectedEmoji = getRandomItem(emojis);
+    
+    const animeName = anime === 'doraemon' ? 'Doraemon' : 'Shinchan';
+    
+    const text = `${selectedEmoji} *${escapeMarkdownV2(animeName)} Mini Quiz\\!*
+
+*Q:* ${escapeMarkdownV2(quiz.question)}
+
+_Think karo aur answer batao comments mein\\!_ 🤓
+
+||Spoiler Alert\\!|| 
+_Answer:_ ||${escapeMarkdownV2(quiz.answer)}||
+
+*Fun Fact:* ${escapeMarkdownV2(quiz.funFact)}
+
+Mind\\-blown\\? ${getRandomItem(['🤯', '😱', '🔥'])} 
+
+_Share karo sabke saath\\!_ 📤`;
+
+    const textHTML = `${selectedEmoji} <b>${animeName} Mini Quiz!</b>
+
+<b>Q:</b> ${quiz.question}
+
+<i>Think karo aur answer batao comments mein!</i> 🤓
+
+<spoiler>Spoiler Alert!</spoiler> 
+<i>Answer:</i> <spoiler>${quiz.answer}</spoiler>
+
+<b>Fun Fact:</b> ${quiz.funFact}
+
+Mind-blown? ${getRandomItem(['🤯', '😱', '🔥'])} 
+
+<i>Share karo sabke saath!</i> 📤`;
+
+    // Generate AI image for quiz
+    const imagePrompt = `${animeName} characters in quiz show, game show style, thinking hard, educational fun`;
+    const imagePath = path.join(imagesDir, `quiz_${Date.now()}.png`);
+    const generatedImage = await generateAnimeImage(imagePrompt, animeName, imagePath);
+
+    return {
+        type: 'Mini Quiz',
+        text: text,
+        textHTML: textHTML,
+        anime: anime,
+        contentKey: `quiz_${anime}_${quiz.question.substring(0, 20)}`,
+        imagePath: generatedImage,
+        imageCaption: generatedImage ? await generateImageCaption(animeName, 'quiz', quiz.question) : null
+    };
+}
+
 // Smart selection - tries to generate unique content not recently posted
 async function generateAnimePost() {
     const postTypes = [
@@ -372,7 +527,10 @@ async function generateAnimePost() {
         generatePoll,
         generateAnimeFacts,
         generateAnimeStories,
-        generateAnimeNews
+        generateAnimeNews,
+        generateCharacterQuotes,
+        generateWouldYouRather,
+        generateMiniQuiz
     ];
     
     const maxAttempts = 10;
@@ -407,5 +565,8 @@ module.exports = {
     generateAnimeFacts,
     generateAnimeStories,
     generateAnimeNews,
+    generateCharacterQuotes,
+    generateWouldYouRather,
+    generateMiniQuiz,
     escapeMarkdownV2
 };

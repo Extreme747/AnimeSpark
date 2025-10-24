@@ -129,6 +129,82 @@ const animeDatabase = {
                 title: "Real-Life Doraemon Tech",
                 content: "Scientists in Japan created a working 'translation device' inspired by Doraemon's Translator Tool! Technology is catching up to anime! 🔬🌐"
             }
+        ],
+        quotes: [
+            {
+                character: "Doraemon",
+                quote: "Nobita, you can't depend on gadgets forever. Sometimes you have to believe in yourself!",
+                context: "Life lesson"
+            },
+            {
+                character: "Nobita",
+                quote: "I'll definitely study... tomorrow!",
+                context: "Classic Nobita excuse"
+            },
+            {
+                character: "Shizuka",
+                quote: "If you work hard, you can achieve anything Nobita!",
+                context: "Encouraging words"
+            },
+            {
+                character: "Gian",
+                quote: "What's mine is mine, what's yours is also mine!",
+                context: "Gian logic"
+            },
+            {
+                character: "Suneo",
+                quote: "My dad bought me the latest gadget from America!",
+                context: "Showing off"
+            },
+            {
+                character: "Doraemon",
+                quote: "Dorayaki is the best food in the world!",
+                context: "Doraemon's passion"
+            },
+            {
+                character: "Nobita's Mom",
+                quote: "Nobita! Stop sleeping and do your homework!",
+                context: "Mom being mom"
+            }
+        ],
+        wouldYouRather: [
+            {
+                optionA: "Have Anywhere Door for life",
+                optionB: "Have Bamboo Copter forever",
+                emoji: "🚪 vs 🚁"
+            },
+            {
+                optionA: "Eat Memory Bread before every exam",
+                optionB: "Use Time Machine to go back and study",
+                emoji: "🍞 vs ⏰"
+            },
+            {
+                optionA: "Be friends with Doraemon",
+                optionB: "Be friends with Nobita",
+                emoji: "🤖 vs 👦"
+            },
+            {
+                optionA: "Have Gian as neighbor",
+                optionB: "Have Suneo as neighbor",
+                emoji: "💪 vs 💰"
+            }
+        ],
+        miniQuiz: [
+            {
+                question: "How many dorayaki can Doraemon eat in one sitting?",
+                answer: "As many as possible! He loves them!",
+                funFact: "Doraemon once ate 100+ dorayaki in the movie!"
+            },
+            {
+                question: "What happens when Nobita sleeps during the day?",
+                answer: "He gets scolded by Mom!",
+                funFact: "Nobita can fall asleep in 0.93 seconds - world record!"
+            },
+            {
+                question: "Why is Doraemon blue and not yellow?",
+                answer: "Mice ate his ears and shock turned him blue!",
+                funFact: "Originally Doraemon was designed to be yellow and cute!"
+            }
         ]
     },
     
@@ -259,6 +335,82 @@ const animeDatabase = {
             {
                 title: "Kasukabe City Tourism Boom",
                 content: "Shinchan's hometown Kasukabe gets 1 million tourists yearly! They built a Shinchan statue and themed attractions! 🏙️🗿"
+            }
+        ],
+        quotes: [
+            {
+                character: "Shinchan",
+                quote: "Ohhh! Action Kamen is here to save the day!",
+                context: "Playing superhero"
+            },
+            {
+                character: "Misae (Mom)",
+                quote: "SHINNN-CHANNNN! Stop causing trouble!",
+                context: "Classic mom rage"
+            },
+            {
+                character: "Hiroshi (Dad)",
+                quote: "All I want is a peaceful weekend...",
+                context: "Dad's dream"
+            },
+            {
+                character: "Shinchan",
+                quote: "Elephant! Elephant! Do the elephant dance!",
+                context: "Being himself"
+            },
+            {
+                character: "Himawari",
+                quote: "Dai! Dai! (Shiny!)",
+                context: "Baby wanting sparkly things"
+            },
+            {
+                character: "Shinchan",
+                quote: "Pretty ladies are everywhere!",
+                context: "Shinchan logic"
+            },
+            {
+                character: "Yoshinaga-sensei",
+                quote: "Shin-chan, please behave in class!",
+                context: "Teacher's struggle"
+            }
+        ],
+        wouldYouRather: [
+            {
+                optionA: "Do Shinchan's butt dance in public",
+                optionB: "Sing like Gian in front of everyone",
+                emoji: "🍑 vs 🎤"
+            },
+            {
+                optionA: "Have Shinchan as your kid",
+                optionB: "Have Nobita as your kid",
+                emoji: "👶 vs 🧒"
+            },
+            {
+                optionA: "Live with Nohara family chaos",
+                optionB: "Deal with Nobita's lazy habits",
+                emoji: "🏠 vs 😴"
+            },
+            {
+                optionA: "Be Action Kamen for a day",
+                optionB: "Have all Doraemon's gadgets",
+                emoji: "🦸 vs 🎒"
+            }
+        ],
+        miniQuiz: [
+            {
+                question: "What's Shinchan's favorite superhero?",
+                answer: "Action Kamen of course!",
+                funFact: "Shinchan has complete Action Kamen merchandise collection!"
+            },
+            {
+                question: "Why does Shinchan call his dad 'Hiroshi' sometimes?",
+                answer: "Because he's a cheeky kid!",
+                funFact: "This shows Shinchan's unique disrespectful but lovable personality!"
+            },
+            {
+                question: "What does Himawari love the most?",
+                answer: "Shiny sparkly things!",
+                funFact: "She has superhuman strength when grabbing shiny objects!"
             }
         ]
     }

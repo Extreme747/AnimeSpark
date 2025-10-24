@@ -89,7 +89,7 @@ ${phrase} ${selectedEmojis[1]} Ye episode toh must\\-watch hai\\!
 
 _Comment your fav scene below\\!_ 💭
 
-${escapeMarkdownV2(hashtags)}`;
+${hashtags}`;
 
     const textHTML = `<b>${episode.title}</b> ${selectedEmojis[0]}
 
@@ -145,7 +145,7 @@ C\\) ${escapeMarkdownV2(trivia.options[2])}
 _Answer batao comments mein\\!_ 🤓
 _Pata hai toh like karo\\!_ ❤️
 
-${escapeMarkdownV2(hashtags)}`;
+${hashtags}`;
 
     const textHTML = `🧩 <b>${animeName} Trivia Time!</b> ${selectedEmoji}
 
@@ -197,7 +197,7 @@ Kaafi interesting na\\? ${getRandomItem(['🤩', '😍', '🔥'])}
 
 _Share karo dosto ke saath\\!_ 📤
 
-${escapeMarkdownV2(hashtags)}`;
+${hashtags}`;
 
     const textHTML = `${selectedEmoji} <b>${animeName} Today in History!</b>
 
@@ -249,7 +249,7 @@ ${poll.options.map((option, index) =>
 _Vote karo abhi\\!_ 🚀
 _Tumhara choice kya hai\\?_ 🤔
 
-${escapeMarkdownV2(hashtags)}`;
+${hashtags}`;
 
     const textHTML = `${selectedEmoji} <b>Poll Time!</b> 
 
@@ -300,7 +300,7 @@ Mind\\-blown na\\? ${getRandomItem(['🤯', '😱', '🔥'])}
 
 _Share this amazing fact\\!_ 📤
 
-${escapeMarkdownV2(hashtags)}`;
+${hashtags}`;
 
     const textHTML = `${selectedEmoji} <b>${fact.title}</b>
 
@@ -350,7 +350,7 @@ Kya interesting story hai na\\? ${getRandomItem(['😍', '🥺', '💕'])}
 
 _Tag your anime\\-loving friends\\!_ 👥
 
-${escapeMarkdownV2(hashtags)}`;
+${hashtags}`;
 
     const textHTML = `${selectedEmoji} <b>${animeName} Story Time!</b>
 
@@ -402,7 +402,7 @@ Kitna exciting hai yaar\\! ${getRandomItem(['🎉', '🔥', '🚀'])}
 
 _Stay tuned for more updates\\!_ 📡
 
-${escapeMarkdownV2(hashtags)}`;
+${hashtags}`;
 
     const textHTML = `${selectedEmoji} <b>${animeName} News Alert!</b>
 
@@ -456,7 +456,7 @@ Kitna relatable hai na\\? ${getRandomItem(['😂', '🥺', '💯'])}
 
 _Share with friends who need this\\!_ 🔥
 
-${escapeMarkdownV2(hashtags)}`;
+${hashtags}`;
 
     const textHTML = `${selectedEmoji} <b>${animeName} Quote of the Day!</b>
 
@@ -510,7 +510,7 @@ Tum kya choose karoge\\? 🤷‍♂️
 _Comment mein batao\\: A ya B\\?_ 👇
 _Tag your friends\\!_ 🔥
 
-${escapeMarkdownV2(hashtags)}`;
+${hashtags}`;
 
     const textHTML = `🤔 <b>Would You Rather?</b> ${scenario.emoji}
 
@@ -570,7 +570,7 @@ Mind\\-blown\\? ${getRandomItem(['🤯', '😱', '🔥'])}
 
 _Share karo sabke saath\\!_ 📤
 
-${escapeMarkdownV2(hashtags)}`;
+${hashtags}`;
 
     const textHTML = `${selectedEmoji} <b>${animeName} Mini Quiz!</b>
 

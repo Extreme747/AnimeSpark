@@ -26,8 +26,53 @@ async function enhanceAnimePost(baseContent, anime, postType) {
     }
 }
 
-// Generate custom anime images with professional thumbnail quality
-async function generateAnimeImage(prompt, anime, outputPath) {
+// Image style templates  
+const imageStyles = {
+    thumbnail: {
+        name: "Professional Thumbnail",
+        getPrompt: (anime, prompt) => `Professional anime thumbnail artwork featuring ${anime} characters. ${prompt}. 
+        Style: Clean vector art, bold outlines, vibrant flat colors, YouTube thumbnail quality.
+        Requirements: Sharp details, no blur, clear character faces, bright lighting, 
+        simple background, professional digital art style, high contrast colors.
+        Quality: Premium illustration, crisp lines, perfect for social media posting.
+        Layout: Centered composition, eye-catching design, perfect for channel thumbnails.`
+    },
+    cartoon: {
+        name: "Cartoon Style",
+        getPrompt: (anime, prompt) => `Cute cartoon illustration of ${anime} characters. ${prompt}. 
+        Style: Traditional cartoon art, thick black outlines, bright pastel colors, playful design.
+        Requirements: Rounded shapes, expressive characters, cheerful atmosphere, child-friendly.
+        Quality: Classic cartoon style like 90s animation, fun and energetic.
+        Layout: Dynamic composition with whimsical elements.`
+    },
+    realistic: {
+        name: "Realistic Anime",
+        getPrompt: (anime, prompt) => `Semi-realistic anime illustration of ${anime} characters. ${prompt}. 
+        Style: Detailed anime art, realistic shading, movie poster quality, dramatic lighting.
+        Requirements: Detailed textures, depth, cinematic feel, high-quality rendering.
+        Quality: Professional anime movie poster, stunning visuals, impressive detail.
+        Layout: Dramatic composition with atmospheric background.`
+    },
+    sketch: {
+        name: "Sketch Art",
+        getPrompt: (anime, prompt) => `Sketch-style artwork of ${anime} characters. ${prompt}. 
+        Style: Hand-drawn pencil sketch, loose lines, artistic feel, manga page quality.
+        Requirements: Sketch textures, dynamic linework, unfinished artistic look.
+        Quality: Professional manga artist sketch, expressive and raw.
+        Layout: Natural sketch composition with fluid motion lines.`
+    },
+    vibrant: {
+        name: "Vibrant Pop Art",
+        getPrompt: (anime, prompt) => `Vibrant pop art style ${anime} characters. ${prompt}. 
+        Style: Bold colors, high contrast, modern pop art aesthetic, eye-popping design.
+        Requirements: Neon colors, energetic vibe, trendy social media style.
+        Quality: Instagram-worthy art, super colorful and attractive.
+        Layout: Bold composition with maximum visual impact.`
+    }
+};
+
+// Generate custom anime images with multiple style options
+async function generateAnimeImage(prompt, anime, outputPath, style = null) {
     try {
         // Create images directory if it doesn't exist
         const imageDir = path.dirname(outputPath);
@@ -35,13 +80,15 @@ async function generateAnimeImage(prompt, anime, outputPath) {
             fs.mkdirSync(imageDir, { recursive: true });
         }
 
-        // Create professional thumbnail-style prompts
-        const enhancedPrompt = `Professional anime thumbnail artwork featuring ${anime} characters. ${prompt}. 
-        Style: Clean vector art, bold outlines, vibrant flat colors, YouTube thumbnail quality.
-        Requirements: Sharp details, no blur, clear character faces, bright lighting, 
-        simple background, professional digital art style, high contrast colors.
-        Quality: Premium illustration, crisp lines, perfect for social media posting.
-        Layout: Centered composition, eye-catching design, perfect for channel thumbnails.`;
+        // Select random style if not specified
+        const availableStyles = Object.keys(imageStyles);
+        const selectedStyle = style || availableStyles[Math.floor(Math.random() * availableStyles.length)];
+        const styleTemplate = imageStyles[selectedStyle];
+        
+        console.log(`🎨 Using ${styleTemplate.name} for image generation`);
+        
+        // Create style-specific prompts
+        const enhancedPrompt = styleTemplate.getPrompt(anime, prompt);
 
         const response = await ai.models.generateContent({
             model: "gemini-2.0-flash-preview-image-generation",

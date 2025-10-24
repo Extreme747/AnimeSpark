@@ -1,6 +1,15 @@
 {
   "posts": [
     {
+      "id": 1761285713210,
+      "timestamp": "2025-10-24T06:01:53.210Z",
+      "type": "Character Quotes",
+      "anime": "doraemon",
+      "contentKey": "quotes_doraemon_Nobita_I'll definitely stud",
+      "preview": "💬 *Doraemon Quote of the Day\\!*\n\n_\"I'll definitely study\\.\\.\\. tomorrow\\!\"_\n\n\\- Nobita \n\n_Classic N",
+      "success": true
+    },
+    {
       "id": 1761285459379,
       "timestamp": "2025-10-24T05:57:39.379Z",
       "type": "Trivia",

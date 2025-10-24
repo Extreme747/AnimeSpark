@@ -34,6 +34,33 @@ if (!fs.existsSync(imagesDir)) {
     fs.mkdirSync(imagesDir);
 }
 
+// Generate hashtags based on anime and post type
+function getHashtags(anime, postType) {
+    const animeHashtags = anime === 'doraemon' 
+        ? ['#Doraemon', '#Nobita', '#AnimeLovers', '#DoraemonFans']
+        : ['#Shinchan', '#CrayonShinchan', '#AnimeComedy', '#ShinchanFans'];
+    
+    const typeHashtags = {
+        'Episode Summary': ['#AnimeEpisodes', '#MustWatch'],
+        'Trivia': ['#AnimeTrivia', '#QuizTime'],
+        'Today in History': ['#AnimeHistory', '#ThrowbackThursday'],
+        'Poll': ['#Polls', '#Vote'],
+        'Anime Facts': ['#AnimeFacts', '#DidYouKnow'],
+        'Anime Stories': ['#AnimeStories', '#Storytime'],
+        'Anime News': ['#AnimeNews', '#BreakingNews'],
+        'Character Quotes': ['#AnimeQuotes', '#Motivation'],
+        'Would You Rather': ['#WouldYouRather', '#GameTime'],
+        'Mini Quiz': ['#AnimeQuiz', '#Trivia']
+    };
+    
+    const selectedTypeHashtags = typeHashtags[postType] || ['#Anime', '#Fun'];
+    const allHashtags = [...animeHashtags, ...selectedTypeHashtags, '#AnimeIndia'];
+    
+    // Randomly select 4-5 hashtags
+    const shuffled = allHashtags.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 5).join(' ');
+}
+
 // Generate different types of anime posts
 async function generateEpisodeSummary() {
     const anime = getRandomItem(['doraemon', 'shinchan']);
@@ -50,6 +77,8 @@ async function generateEpisodeSummary() {
     const animeName = anime === 'doraemon' ? 'Doraemon' : 'Shinchan';
     const phrase = getRandomItem(hinglishPhrases);
     
+    const hashtags = getHashtags(anime, 'Episode Summary');
+    
     const text = `*${escapeMarkdownV2(episode.title)}* ${selectedEmojis[0]}
 
 _Episode ${escapeMarkdownV2(episode.number.toString())} \\- ${escapeMarkdownV2(animeName)}_
@@ -58,7 +87,9 @@ _Episode ${escapeMarkdownV2(episode.number.toString())} \\- ${escapeMarkdownV2(a
 
 ${phrase} ${selectedEmojis[1]} Ye episode toh must\\-watch hai\\! 
 
-_Comment your fav scene below\\!_ 💭`;
+_Comment your fav scene below\\!_ 💭
+
+${escapeMarkdownV2(hashtags)}`;
 
     const textHTML = `<b>${episode.title}</b> ${selectedEmojis[0]}
 
@@ -68,7 +99,9 @@ _Comment your fav scene below\\!_ 💭`;
 
 ${phrase} ${selectedEmojis[1]} Ye episode toh must-watch hai! 
 
-<i>Comment your fav scene below!</i> 💭`;
+<i>Comment your fav scene below!</i> 💭
+
+${hashtags}`;
 
     // Generate AI image for this episode
     const imagePrompt = `${animeName} episode scene: ${episode.summary}. Characters in action, vibrant colors.`;
@@ -99,6 +132,8 @@ async function generateTrivia() {
     const emojis = ['🧠', '🤔', '💡', '🎯', '🔥', '✨'];
     const selectedEmoji = getRandomItem(emojis);
     
+    const hashtags = getHashtags(anime, 'Trivia');
+    
     const text = `🧩 *${escapeMarkdownV2(animeName)} Trivia Time\\!* ${selectedEmoji}
 
 ${escapeMarkdownV2(trivia.question)}
@@ -108,7 +143,9 @@ B\\) ${escapeMarkdownV2(trivia.options[1])}
 C\\) ${escapeMarkdownV2(trivia.options[2])}
 
 _Answer batao comments mein\\!_ 🤓
-_Pata hai toh like karo\\!_ ❤️`;
+_Pata hai toh like karo\\!_ ❤️
+
+${escapeMarkdownV2(hashtags)}`;
 
     const textHTML = `🧩 <b>${animeName} Trivia Time!</b> ${selectedEmoji}
 
@@ -119,7 +156,9 @@ B) ${trivia.options[1]}
 C) ${trivia.options[2]}
 
 <i>Answer batao comments mein!</i> 🤓
-<i>Pata hai toh like karo!</i> ❤️`;
+<i>Pata hai toh like karo!</i> ❤️
+
+${hashtags}`;
 
     // Generate AI image for trivia
     const imagePrompt = `${animeName} characters thinking, quiz time, question marks, bright educational scene`;
@@ -146,6 +185,8 @@ async function generateTodayInHistory() {
     
     const animeName = anime === 'doraemon' ? 'Doraemon' : 'Shinchan';
     
+    const hashtags = getHashtags(anime, 'Today in History');
+    
     const text = `${selectedEmoji} *${escapeMarkdownV2(animeName)} Today in History\\!*
 
 _${escapeMarkdownV2(formatDate())}_ 
@@ -154,7 +195,9 @@ ${escapeMarkdownV2(fact.content)}
 
 Kaafi interesting na\\? ${getRandomItem(['🤩', '😍', '🔥'])} 
 
-_Share karo dosto ke saath\\!_ 📤`;
+_Share karo dosto ke saath\\!_ 📤
+
+${escapeMarkdownV2(hashtags)}`;
 
     const textHTML = `${selectedEmoji} <b>${animeName} Today in History!</b>
 
@@ -164,7 +207,9 @@ ${fact.content}
 
 Kaafi interesting na? ${getRandomItem(['🤩', '😍', '🔥'])} 
 
-<i>Share karo dosto ke saath!</i> 📤`;
+<i>Share karo dosto ke saath!</i> 📤
+
+${hashtags}`;
 
     // Generate AI image for history fact
     const imagePrompt = `${animeName} historical moment, vintage style, celebrating anniversary, nostalgic scene`;
@@ -191,6 +236,8 @@ async function generatePoll() {
     
     const animeName = anime === 'doraemon' ? 'Doraemon' : 'Shinchan';
     
+    const hashtags = getHashtags(anime, 'Poll');
+    
     const text = `${selectedEmoji} *Poll Time\\!* 
 
 ${escapeMarkdownV2(poll.question)}
@@ -200,7 +247,9 @@ ${poll.options.map((option, index) =>
 ).join('\n')}
 
 _Vote karo abhi\\!_ 🚀
-_Tumhara choice kya hai\\?_ 🤔`;
+_Tumhara choice kya hai\\?_ 🤔
+
+${escapeMarkdownV2(hashtags)}`;
 
     const textHTML = `${selectedEmoji} <b>Poll Time!</b> 
 
@@ -211,7 +260,9 @@ ${poll.options.map((option, index) =>
 ).join('\n')}
 
 <i>Vote karo abhi!</i> 🚀
-<i>Tumhara choice kya hai?</i> 🤔`;
+<i>Tumhara choice kya hai?</i> 🤔
+
+${hashtags}`;
 
     // Generate AI image for poll
     const imagePrompt = `${animeName} characters voting, democracy, multiple choices, fun interactive scene`;
@@ -239,13 +290,17 @@ async function generateAnimeFacts() {
     
     const animeName = anime === 'doraemon' ? 'Doraemon' : 'Shinchan';
     
+    const hashtags = getHashtags(anime, 'Anime Facts');
+    
     const text = `${selectedEmoji} *${escapeMarkdownV2(fact.title)}*
 
 ${escapeMarkdownV2(fact.content)}
 
 Mind\\-blown na\\? ${getRandomItem(['🤯', '😱', '🔥'])} 
 
-_Share this amazing fact\\!_ 📤`;
+_Share this amazing fact\\!_ 📤
+
+${escapeMarkdownV2(hashtags)}`;
 
     const textHTML = `${selectedEmoji} <b>${fact.title}</b>
 
@@ -253,7 +308,9 @@ ${fact.content}
 
 Mind-blown na? ${getRandomItem(['🤯', '😱', '🔥'])} 
 
-<i>Share this amazing fact!</i> 📤`;
+<i>Share this amazing fact!</i> 📤
+
+${hashtags}`;
 
     // Generate AI image for facts
     const imagePrompt = `${animeName} characters discovering amazing facts, educational scene, light bulb moment, knowledge sharing`;
@@ -281,6 +338,8 @@ async function generateAnimeStories() {
     
     const animeName = anime === 'doraemon' ? 'Doraemon' : 'Shinchan';
     
+    const hashtags = getHashtags(anime, 'Anime Stories');
+    
     const text = `${selectedEmoji} *${escapeMarkdownV2(animeName)} Story Time\\!*
 
 *${escapeMarkdownV2(story.title)}*
@@ -289,7 +348,9 @@ ${escapeMarkdownV2(story.content)}
 
 Kya interesting story hai na\\? ${getRandomItem(['😍', '🥺', '💕'])} 
 
-_Tag your anime\\-loving friends\\!_ 👥`;
+_Tag your anime\\-loving friends\\!_ 👥
+
+${escapeMarkdownV2(hashtags)}`;
 
     const textHTML = `${selectedEmoji} <b>${animeName} Story Time!</b>
 
@@ -299,7 +360,9 @@ ${story.content}
 
 Kya interesting story hai na? ${getRandomItem(['😍', '🥺', '💕'])} 
 
-<i>Tag your anime-loving friends!</i> 👥`;
+<i>Tag your anime-loving friends!</i> 👥
+
+${hashtags}`;
 
     // Generate AI image for stories
     const imagePrompt = `${animeName} characters in storytelling scene, emotional moment, flashback style, nostalgic atmosphere`;
@@ -327,6 +390,8 @@ async function generateAnimeNews() {
     
     const animeName = anime === 'doraemon' ? 'Doraemon' : 'Shinchan';
     
+    const hashtags = getHashtags(anime, 'Anime News');
+    
     const text = `${selectedEmoji} *${escapeMarkdownV2(animeName)} News Alert\\!*
 
 *${escapeMarkdownV2(news.title)}*
@@ -335,7 +400,9 @@ ${escapeMarkdownV2(news.content)}
 
 Kitna exciting hai yaar\\! ${getRandomItem(['🎉', '🔥', '🚀'])} 
 
-_Stay tuned for more updates\\!_ 📡`;
+_Stay tuned for more updates\\!_ 📡
+
+${escapeMarkdownV2(hashtags)}`;
 
     const textHTML = `${selectedEmoji} <b>${animeName} News Alert!</b>
 
@@ -345,7 +412,9 @@ ${news.content}
 
 Kitna exciting hai yaar! ${getRandomItem(['🎉', '🔥', '🚀'])} 
 
-<i>Stay tuned for more updates!</i> 📡`;
+<i>Stay tuned for more updates!</i> 📡
+
+${hashtags}`;
 
     // Generate AI image for news
     const imagePrompt = `${animeName} characters reading news, exciting announcement, celebration scene, modern news broadcast style`;
@@ -373,6 +442,8 @@ async function generateCharacterQuotes() {
     
     const animeName = anime === 'doraemon' ? 'Doraemon' : 'Shinchan';
     
+    const hashtags = getHashtags(anime, 'Character Quotes');
+    
     const text = `${selectedEmoji} *${escapeMarkdownV2(animeName)} Quote of the Day\\!*
 
 _"${escapeMarkdownV2(quote.quote)}"_
@@ -383,7 +454,9 @@ _${escapeMarkdownV2(quote.context)}_
 
 Kitna relatable hai na\\? ${getRandomItem(['😂', '🥺', '💯'])} 
 
-_Share with friends who need this\\!_ 🔥`;
+_Share with friends who need this\\!_ 🔥
+
+${escapeMarkdownV2(hashtags)}`;
 
     const textHTML = `${selectedEmoji} <b>${animeName} Quote of the Day!</b>
 
@@ -395,7 +468,9 @@ _Share with friends who need this\\!_ 🔥`;
 
 Kitna relatable hai na? ${getRandomItem(['😂', '🥺', '💯'])} 
 
-<i>Share with friends who need this!</i> 🔥`;
+<i>Share with friends who need this!</i> 🔥
+
+${hashtags}`;
 
     // Generate AI image for quotes
     const imagePrompt = `${quote.character} from ${animeName} giving wise advice, inspirational scene, motivational poster style`;
@@ -420,6 +495,8 @@ async function generateWouldYouRather() {
     
     const animeName = anime === 'doraemon' ? 'Doraemon' : 'Shinchan';
     
+    const hashtags = getHashtags(anime, 'Would You Rather');
+    
     const text = `🤔 *Would You Rather\\?* ${scenario.emoji}
 
 *Option A:* ${escapeMarkdownV2(scenario.optionA)}
@@ -431,7 +508,9 @@ async function generateWouldYouRather() {
 Tum kya choose karoge\\? 🤷‍♂️
 
 _Comment mein batao\\: A ya B\\?_ 👇
-_Tag your friends\\!_ 🔥`;
+_Tag your friends\\!_ 🔥
+
+${escapeMarkdownV2(hashtags)}`;
 
     const textHTML = `🤔 <b>Would You Rather?</b> ${scenario.emoji}
 
@@ -444,7 +523,9 @@ _Tag your friends\\!_ 🔥`;
 Tum kya choose karoge? 🤷‍♂️
 
 <i>Comment mein batao: A ya B?</i> 👇
-<i>Tag your friends!</i> 🔥`;
+<i>Tag your friends!</i> 🔥
+
+${hashtags}`;
 
     // Generate AI image for would you rather
     const imagePrompt = `${animeName} characters making tough choices, decision time, vs battle style, fun dilemma`;
@@ -472,6 +553,8 @@ async function generateMiniQuiz() {
     
     const animeName = anime === 'doraemon' ? 'Doraemon' : 'Shinchan';
     
+    const hashtags = getHashtags(anime, 'Mini Quiz');
+    
     const text = `${selectedEmoji} *${escapeMarkdownV2(animeName)} Mini Quiz\\!*
 
 *Q:* ${escapeMarkdownV2(quiz.question)}
@@ -485,7 +568,9 @@ _Answer:_ ||${escapeMarkdownV2(quiz.answer)}||
 
 Mind\\-blown\\? ${getRandomItem(['🤯', '😱', '🔥'])} 
 
-_Share karo sabke saath\\!_ 📤`;
+_Share karo sabke saath\\!_ 📤
+
+${escapeMarkdownV2(hashtags)}`;
 
     const textHTML = `${selectedEmoji} <b>${animeName} Mini Quiz!</b>
 
@@ -500,7 +585,9 @@ _Share karo sabke saath\\!_ 📤`;
 
 Mind-blown? ${getRandomItem(['🤯', '😱', '🔥'])} 
 
-<i>Share karo sabke saath!</i> 📤`;
+<i>Share karo sabke saath!</i> 📤
+
+${hashtags}`;
 
     // Generate AI image for quiz
     const imagePrompt = `${animeName} characters in quiz show, game show style, thinking hard, educational fun`;

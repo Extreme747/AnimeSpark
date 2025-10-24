@@ -1,6 +1,7 @@
 require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
 const { generateAnimePost } = require('./postGenerator');
+const { addToHistory } = require('./historyManager');
 const fs = require('fs');
 
 console.log('🚀 Anime Bot Starting...');
@@ -54,12 +55,18 @@ async function postToChannel() {
             });
         }
         
+        // Save to history
+        addToHistory(post);
+        
         console.log(`✅ Posted successfully: ${post.type}`);
         console.log(`🎯 Anime: ${post.anime}`);
         console.log(`📝 Content: ${post.text.substring(0, 50)}...`);
+        console.log(`💾 Saved to history: ${post.contentKey}`);
         if (post.imagePath) {
             console.log(`🖼️ Image: ${post.imageCaption || 'Generated'}`);
         }
+        
+        return post;
         
     } catch (error) {
         console.error('❌ Error posting to channel:', error.message);
@@ -80,9 +87,14 @@ async function postToChannel() {
                     disable_web_page_preview: true
                 });
             }
+            // Save fallback post to history too
+            addToHistory(fallbackPost);
             console.log('✅ Posted with HTML fallback');
+            console.log(`💾 Saved to history: ${fallbackPost.contentKey}`);
+            return fallbackPost;
         } catch (fallbackError) {
             console.error('❌ Fallback also failed:', fallbackError.message);
+            return null;
         }
     }
 }

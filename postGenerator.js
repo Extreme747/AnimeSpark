@@ -1,5 +1,6 @@
 const { animeDatabase, getRandomItem, formatDate } = require('./animeData');
 const { enhanceAnimePost, generateAnimeImage, generateImageCaption, generateCustomTrivia } = require('./gemini');
+const { wasRecentlyPosted } = require('./historyManager');
 const fs = require('fs');
 const path = require('path');
 
@@ -79,6 +80,7 @@ ${phrase} ${selectedEmojis[1]} Ye episode toh must-watch hai!
         text: text,
         textHTML: textHTML,
         anime: anime,
+        contentKey: `episode_${anime}_${episode.number}`,
         imagePath: generatedImage,
         imageCaption: generatedImage ? await generateImageCaption(animeName, 'episode', episode.title) : null
     };
@@ -129,6 +131,7 @@ C) ${trivia.options[2]}
         text: text,
         textHTML: textHTML,
         anime: anime,
+        contentKey: `trivia_${anime}_${trivia.question.substring(0, 30)}`,
         imagePath: generatedImage,
         imageCaption: generatedImage ? await generateImageCaption(animeName, 'trivia', trivia.question) : null
     };
@@ -173,6 +176,7 @@ Kaafi interesting na? ${getRandomItem(['🤩', '😍', '🔥'])}
         text: text,
         textHTML: textHTML,
         anime: anime,
+        contentKey: `history_${anime}_${fact.content.substring(0, 30)}`,
         imagePath: generatedImage,
         imageCaption: generatedImage ? await generateImageCaption(animeName, 'history', fact.content) : null
     };
@@ -219,6 +223,7 @@ ${poll.options.map((option, index) =>
         text: text,
         textHTML: textHTML,
         anime: anime,
+        contentKey: `poll_${anime}_${poll.question.substring(0, 30)}`,
         imagePath: generatedImage,
         imageCaption: generatedImage ? await generateImageCaption(animeName, 'poll', poll.question) : null
     };
@@ -260,6 +265,7 @@ Mind-blown na? ${getRandomItem(['🤯', '😱', '🔥'])}
         text: text,
         textHTML: textHTML,
         anime: anime,
+        contentKey: `facts_${anime}_${fact.title.substring(0, 30)}`,
         imagePath: generatedImage,
         imageCaption: generatedImage ? await generateImageCaption(animeName, 'facts', fact.title) : null
     };
@@ -305,6 +311,7 @@ Kya interesting story hai na? ${getRandomItem(['😍', '🥺', '💕'])}
         text: text,
         textHTML: textHTML,
         anime: anime,
+        contentKey: `stories_${anime}_${story.title.substring(0, 30)}`,
         imagePath: generatedImage,
         imageCaption: generatedImage ? await generateImageCaption(animeName, 'story', story.title) : null
     };
@@ -350,12 +357,13 @@ Kitna exciting hai yaar! ${getRandomItem(['🎉', '🔥', '🚀'])}
         text: text,
         textHTML: textHTML,
         anime: anime,
+        contentKey: `news_${anime}_${news.title.substring(0, 30)}`,
         imagePath: generatedImage,
         imageCaption: generatedImage ? await generateImageCaption(animeName, 'news', news.title) : null
     };
 }
 
-// Main function to generate random anime posts
+// Smart selection - tries to generate unique content not recently posted
 async function generateAnimePost() {
     const postTypes = [
         generateEpisodeSummary,
@@ -367,8 +375,27 @@ async function generateAnimePost() {
         generateAnimeNews
     ];
     
-    const randomGenerator = getRandomItem(postTypes);
-    return await randomGenerator();
+    const maxAttempts = 10;
+    let attempts = 0;
+    
+    while (attempts < maxAttempts) {
+        const randomGenerator = getRandomItem(postTypes);
+        const post = await randomGenerator();
+        
+        // Check if this content was recently posted
+        if (!wasRecentlyPosted(post.contentKey)) {
+            console.log(`✨ Found unique content on attempt ${attempts + 1}`);
+            return post;
+        }
+        
+        console.log(`⚠️ Content already posted recently, trying again... (attempt ${attempts + 1})`);
+        attempts++;
+    }
+    
+    // If all attempts fail, just return the last generated post
+    console.log('⚠️ Could not find unique content after 10 attempts, posting anyway');
+    const fallbackGenerator = getRandomItem(postTypes);
+    return await fallbackGenerator();
 }
 
 module.exports = {

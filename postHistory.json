@@ -1,0 +1,22 @@
+{
+  "posts": [
+    {
+      "id": 1761285168638,
+      "timestamp": "2025-10-24T05:52:48.638Z",
+      "type": "Anime Facts",
+      "anime": "doraemon",
+      "contentKey": "facts_doraemon_Gian's Secret Dream",
+      "preview": "🎯 *Gian's Secret Dream*\n\nDespite being a bully, Gian secretly dreams of becoming a famous singer\\! ",
+      "success": true
+    },
+    {
+      "id": 1761285141767,
+      "timestamp": "2025-10-24T05:52:21.767Z",
+      "type": "Poll",
+      "anime": "shinchan",
+      "contentKey": "poll_shinchan_Most relatable Shinchan parent",
+      "preview": "🎯 *Poll Time\\!* \n\nMost relatable Shinchan parent?\n\n1\\) Misae \\(Mom\\)\n2\\) Hiroshi \\(Dad\\)\n3\\) Both e",
+      "success": true
+    }
+  ]
+}

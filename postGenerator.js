@@ -34,7 +34,7 @@ if (!fs.existsSync(imagesDir)) {
     fs.mkdirSync(imagesDir);
 }
 
-// Generate hashtags based on anime and post type
+// Generate hashtags based on anime and post type (returns unescaped for HTML, will be escaped for MarkdownV2)
 function getHashtags(anime, postType) {
     const animeHashtags = anime === 'doraemon' 
         ? ['#Doraemon', '#Nobita', '#AnimeLovers', '#DoraemonFans']
@@ -59,6 +59,11 @@ function getHashtags(anime, postType) {
     // Randomly select 4-5 hashtags
     const shuffled = allHashtags.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, 5).join(' ');
+}
+
+// Helper function to properly escape hashtags for MarkdownV2
+function escapeHashtagsMarkdownV2(hashtagString) {
+    return hashtagString.replace(/#/g, '\\#');
 }
 
 // Generate different types of anime posts
@@ -89,7 +94,7 @@ ${phrase} ${selectedEmojis[1]} Ye episode toh must\\-watch hai\\!
 
 _Comment your fav scene below\\!_ 💭
 
-${hashtags}`;
+${escapeHashtagsMarkdownV2(hashtags)}`;
 
     const textHTML = `<b>${episode.title}</b> ${selectedEmojis[0]}
 
@@ -101,7 +106,7 @@ ${phrase} ${selectedEmojis[1]} Ye episode toh must-watch hai!
 
 <i>Comment your fav scene below!</i> 💭
 
-${hashtags}`;
+${escapeHashtagsMarkdownV2(hashtags)}`;
 
     // Generate AI image for this episode
     const imagePrompt = `${animeName} episode scene: ${episode.summary}. Characters in action, vibrant colors.`;
@@ -145,7 +150,7 @@ C\\) ${escapeMarkdownV2(trivia.options[2])}
 _Answer batao comments mein\\!_ 🤓
 _Pata hai toh like karo\\!_ ❤️
 
-${hashtags}`;
+${escapeHashtagsMarkdownV2(hashtags)}`;
 
     const textHTML = `🧩 <b>${animeName} Trivia Time!</b> ${selectedEmoji}
 
@@ -158,7 +163,7 @@ C) ${trivia.options[2]}
 <i>Answer batao comments mein!</i> 🤓
 <i>Pata hai toh like karo!</i> ❤️
 
-${hashtags}`;
+${escapeHashtagsMarkdownV2(hashtags)}`;
 
     // Generate AI image for trivia
     const imagePrompt = `${animeName} characters thinking, quiz time, question marks, bright educational scene`;
@@ -197,7 +202,7 @@ Kaafi interesting na\\? ${getRandomItem(['🤩', '😍', '🔥'])}
 
 _Share karo dosto ke saath\\!_ 📤
 
-${hashtags}`;
+${escapeHashtagsMarkdownV2(hashtags)}`;
 
     const textHTML = `${selectedEmoji} <b>${animeName} Today in History!</b>
 
@@ -209,7 +214,7 @@ Kaafi interesting na? ${getRandomItem(['🤩', '😍', '🔥'])}
 
 <i>Share karo dosto ke saath!</i> 📤
 
-${hashtags}`;
+${escapeHashtagsMarkdownV2(hashtags)}`;
 
     // Generate AI image for history fact
     const imagePrompt = `${animeName} historical moment, vintage style, celebrating anniversary, nostalgic scene`;
@@ -249,7 +254,7 @@ ${poll.options.map((option, index) =>
 _Vote karo abhi\\!_ 🚀
 _Tumhara choice kya hai\\?_ 🤔
 
-${hashtags}`;
+${escapeHashtagsMarkdownV2(hashtags)}`;
 
     const textHTML = `${selectedEmoji} <b>Poll Time!</b> 
 
@@ -262,7 +267,7 @@ ${poll.options.map((option, index) =>
 <i>Vote karo abhi!</i> 🚀
 <i>Tumhara choice kya hai?</i> 🤔
 
-${hashtags}`;
+${escapeHashtagsMarkdownV2(hashtags)}`;
 
     // Generate AI image for poll
     const imagePrompt = `${animeName} characters voting, democracy, multiple choices, fun interactive scene`;
@@ -300,7 +305,7 @@ Mind\\-blown na\\? ${getRandomItem(['🤯', '😱', '🔥'])}
 
 _Share this amazing fact\\!_ 📤
 
-${hashtags}`;
+${escapeHashtagsMarkdownV2(hashtags)}`;
 
     const textHTML = `${selectedEmoji} <b>${fact.title}</b>
 
@@ -310,7 +315,7 @@ Mind-blown na? ${getRandomItem(['🤯', '😱', '🔥'])}
 
 <i>Share this amazing fact!</i> 📤
 
-${hashtags}`;
+${escapeHashtagsMarkdownV2(hashtags)}`;
 
     // Generate AI image for facts
     const imagePrompt = `${animeName} characters discovering amazing facts, educational scene, light bulb moment, knowledge sharing`;
@@ -350,7 +355,7 @@ Kya interesting story hai na\\? ${getRandomItem(['😍', '🥺', '💕'])}
 
 _Tag your anime\\-loving friends\\!_ 👥
 
-${hashtags}`;
+${escapeHashtagsMarkdownV2(hashtags)}`;
 
     const textHTML = `${selectedEmoji} <b>${animeName} Story Time!</b>
 
@@ -362,7 +367,7 @@ Kya interesting story hai na? ${getRandomItem(['😍', '🥺', '💕'])}
 
 <i>Tag your anime-loving friends!</i> 👥
 
-${hashtags}`;
+${escapeHashtagsMarkdownV2(hashtags)}`;
 
     // Generate AI image for stories
     const imagePrompt = `${animeName} characters in storytelling scene, emotional moment, flashback style, nostalgic atmosphere`;
@@ -402,7 +407,7 @@ Kitna exciting hai yaar\\! ${getRandomItem(['🎉', '🔥', '🚀'])}
 
 _Stay tuned for more updates\\!_ 📡
 
-${hashtags}`;
+${escapeHashtagsMarkdownV2(hashtags)}`;
 
     const textHTML = `${selectedEmoji} <b>${animeName} News Alert!</b>
 
@@ -414,7 +419,7 @@ Kitna exciting hai yaar! ${getRandomItem(['🎉', '🔥', '🚀'])}
 
 <i>Stay tuned for more updates!</i> 📡
 
-${hashtags}`;
+${escapeHashtagsMarkdownV2(hashtags)}`;
 
     // Generate AI image for news
     const imagePrompt = `${animeName} characters reading news, exciting announcement, celebration scene, modern news broadcast style`;
@@ -456,7 +461,7 @@ Kitna relatable hai na\\? ${getRandomItem(['😂', '🥺', '💯'])}
 
 _Share with friends who need this\\!_ 🔥
 
-${hashtags}`;
+${escapeHashtagsMarkdownV2(hashtags)}`;
 
     const textHTML = `${selectedEmoji} <b>${animeName} Quote of the Day!</b>
 
@@ -470,7 +475,7 @@ Kitna relatable hai na? ${getRandomItem(['😂', '🥺', '💯'])}
 
 <i>Share with friends who need this!</i> 🔥
 
-${hashtags}`;
+${escapeHashtagsMarkdownV2(hashtags)}`;
 
     // Generate AI image for quotes
     const imagePrompt = `${quote.character} from ${animeName} giving wise advice, inspirational scene, motivational poster style`;
@@ -510,7 +515,7 @@ Tum kya choose karoge\\? 🤷‍♂️
 _Comment mein batao\\: A ya B\\?_ 👇
 _Tag your friends\\!_ 🔥
 
-${hashtags}`;
+${escapeHashtagsMarkdownV2(hashtags)}`;
 
     const textHTML = `🤔 <b>Would You Rather?</b> ${scenario.emoji}
 
@@ -525,7 +530,7 @@ Tum kya choose karoge? 🤷‍♂️
 <i>Comment mein batao: A ya B?</i> 👇
 <i>Tag your friends!</i> 🔥
 
-${hashtags}`;
+${escapeHashtagsMarkdownV2(hashtags)}`;
 
     // Generate AI image for would you rather
     const imagePrompt = `${animeName} characters making tough choices, decision time, vs battle style, fun dilemma`;
@@ -570,7 +575,7 @@ Mind\\-blown\\? ${getRandomItem(['🤯', '😱', '🔥'])}
 
 _Share karo sabke saath\\!_ 📤
 
-${hashtags}`;
+${escapeHashtagsMarkdownV2(hashtags)}`;
 
     const textHTML = `${selectedEmoji} <b>${animeName} Mini Quiz!</b>
 
@@ -587,7 +592,7 @@ Mind-blown? ${getRandomItem(['🤯', '😱', '🔥'])}
 
 <i>Share karo sabke saath!</i> 📤
 
-${hashtags}`;
+${escapeHashtagsMarkdownV2(hashtags)}`;
 
     // Generate AI image for quiz
     const imagePrompt = `${animeName} characters in quiz show, game show style, thinking hard, educational fun`;

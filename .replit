@@ -4,4 +4,4 @@ modules = ["nodejs-20"]
 channel = "stable-25_05"
 
 [agent]
-integrations = ["javascript_gemini==1.0.0"]
+integrations = ["javascript_gemini:1.0.0", "javascript_openai:1.0.0"]

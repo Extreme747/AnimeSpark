@@ -71,9 +71,50 @@ const imageStyles = {
     }
 };
 
-// Generate custom anime images - text-only mode (image API not available in free tier)
+// Generate custom anime images using Imagen 4 API
 async function generateAnimeImage(prompt, anime, outputPath, style = null) {
-    return null;
+    try {
+        // Create images directory if it doesn't exist
+        const imageDir = path.dirname(outputPath);
+        if (!fs.existsSync(imageDir)) {
+            fs.mkdirSync(imageDir, { recursive: true });
+        }
+
+        // Select random style if not specified
+        const availableStyles = Object.keys(imageStyles);
+        const selectedStyle = style || availableStyles[Math.floor(Math.random() * availableStyles.length)];
+        const styleTemplate = imageStyles[selectedStyle];
+        
+        console.log(`🎨 Using ${styleTemplate.name} for image generation`);
+        
+        // Create style-specific prompts
+        const enhancedPrompt = styleTemplate.getPrompt(anime, prompt);
+
+        // Use Imagen 4 for image generation
+        const response = await ai.models.generateImages({
+            model: 'imagen-4.0-generate-001',
+            prompt: enhancedPrompt,
+            config: {
+                numberOfImages: 1,
+                safetyFilterLevel: "block_only_high",
+                personGeneration: "allow_adult"
+            },
+        });
+
+        if (response.generatedImages && response.generatedImages.length > 0) {
+            const generatedImage = response.generatedImages[0];
+            const imageData = Buffer.from(generatedImage.image.imageBytes, 'base64');
+            fs.writeFileSync(outputPath, imageData);
+            console.log(`🎨 Generated ${styleTemplate.name}: ${outputPath}`);
+            return outputPath;
+        }
+
+        console.log(`⚠️ No images generated`);
+        return null;
+    } catch (error) {
+        console.log(`⚠️ Image generation failed: ${error.message}`);
+        return null;
+    }
 }
 
 // Generate creative captions for images

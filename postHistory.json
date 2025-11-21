@@ -1,6 +1,24 @@
 {
   "posts": [
     {
+      "id": 1763712924225,
+      "timestamp": "2025-11-21T08:15:24.225Z",
+      "type": "Character Quotes",
+      "anime": "shinchan",
+      "contentKey": "quotes_shinchan_Shinchan_Ohhh! Action Kamen i",
+      "preview": "🗣️ *Shinchan Quote of the Day\\!*\n\n_\"Ohhh\\! Action Kamen is here to save the day\\!\"_\n\n\\- Shinchan \n\n",
+      "success": true
+    },
+    {
+      "id": 1763712829655,
+      "timestamp": "2025-11-21T08:13:49.655Z",
+      "type": "Character Quotes",
+      "anime": "doraemon",
+      "contentKey": "quotes_doraemon_Suneo_My dad bought me the",
+      "preview": "✨ *Doraemon Quote of the Day\\!*\n\n_\"My dad bought me the latest gadget from America\\!\"_\n\n\\- Suneo \n\n_",
+      "success": true
+    },
+    {
       "id": 1763712804960,
       "timestamp": "2025-11-21T08:13:24.960Z",
       "type": "Mini Quiz",

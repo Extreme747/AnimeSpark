@@ -74,49 +74,7 @@ const imageStyles = {
 // Generate custom anime images with multiple style options
 async function generateAnimeImage(prompt, anime, outputPath, style = null) {
     try {
-        // Create images directory if it doesn't exist
-        const imageDir = path.dirname(outputPath);
-        if (!fs.existsSync(imageDir)) {
-            fs.mkdirSync(imageDir, { recursive: true });
-        }
-
-        // Select random style if not specified
-        const availableStyles = Object.keys(imageStyles);
-        const selectedStyle = style || availableStyles[Math.floor(Math.random() * availableStyles.length)];
-        const styleTemplate = imageStyles[selectedStyle];
-        
-        console.log(`🎨 Using ${styleTemplate.name} for image generation`);
-        
-        // Create style-specific prompts
-        const enhancedPrompt = styleTemplate.getPrompt(anime, prompt);
-
-        const response = await ai.models.generateContent({
-            model: "gemini-2.0-flash-preview-image-generation",
-            contents: [{ role: "user", parts: [{ text: enhancedPrompt }] }],
-            config: {
-                responseModalities: [Modality.TEXT, Modality.IMAGE],
-            },
-        });
-
-        const candidates = response.candidates;
-        if (!candidates || candidates.length === 0) {
-            return null;
-        }
-
-        const content = candidates[0].content;
-        if (!content || !content.parts) {
-            return null;
-        }
-
-        for (const part of content.parts) {
-            if (part.inlineData && part.inlineData.data) {
-                const imageData = Buffer.from(part.inlineData.data, "base64");
-                fs.writeFileSync(outputPath, imageData);
-                console.log(`🎨 Generated professional thumbnail: ${outputPath}`);
-                return outputPath;
-            }
-        }
-
+        console.log(`⏭️ Image generation currently unavailable - posting text-only`);
         return null;
     } catch (error) {
         console.log(`⚠️ Image generation failed: ${error.message}`);

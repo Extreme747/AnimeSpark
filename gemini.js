@@ -71,15 +71,9 @@ const imageStyles = {
     }
 };
 
-// Generate custom anime images with multiple style options
+// Generate custom anime images - text-only mode (image API not available in free tier)
 async function generateAnimeImage(prompt, anime, outputPath, style = null) {
-    try {
-        console.log(`⏭️ Image generation currently unavailable - posting text-only`);
-        return null;
-    } catch (error) {
-        console.log(`⚠️ Image generation failed: ${error.message}`);
-        return null;
-    }
+    return null;
 }
 
 // Generate creative captions for images

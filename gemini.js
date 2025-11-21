@@ -96,8 +96,7 @@ async function generateAnimeImage(prompt, anime, outputPath, style = null) {
             prompt: enhancedPrompt,
             config: {
                 numberOfImages: 1,
-                safetyFilterLevel: "block_only_high",
-                personGeneration: "allow_adult"
+                safetyFilterLevel: "block_low_and_above"
             },
         });
 

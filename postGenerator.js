@@ -1,6 +1,5 @@
 const { animeDatabase, getRandomItem, formatDate } = require('./animeData');
-const { enhanceAnimePost, generateImageCaption, generateCustomTrivia } = require('./gemini');
-const { generateAnimeImage } = require('./openai-images');
+const { enhanceAnimePost, generateAnimeImage, generateImageCaption, generateCustomTrivia } = require('./gemini');
 const { wasRecentlyPosted } = require('./historyManager');
 const fs = require('fs');
 const path = require('path');

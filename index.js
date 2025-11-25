@@ -2,27 +2,45 @@ require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
 const { generateAnimePost } = require('./postGenerator');
 const { addToHistory } = require('./historyManager');
+const { trackPost, loadAnalytics, printAnalytics } = require('./analytics');
+const config = require('./config');
+const { startScheduler, stopScheduler } = require('./scheduler');
+const { handleAdminMessage, isAdmin } = require('./admin');
 const fs = require('fs');
 
 console.log('🚀 Anime Bot Starting...');
 console.log('🎨 Preparing AI magic...');
 
+// Load analytics
+loadAnalytics();
+
 // Bot configuration
-const token = process.env.TELEGRAM_BOT_TOKEN;
-const channelId = process.env.CHANNEL_ID;
+const token = config.TELEGRAM_BOT_TOKEN;
+const channels = config.CHANNELS;
 
 if (!token) {
     console.error('❌ TELEGRAM_BOT_TOKEN not found in environment variables!');
     process.exit(1);
 }
 
-if (!channelId) {
+if (!channels || channels.length === 0) {
     console.error('❌ CHANNEL_ID not found in environment variables!');
     process.exit(1);
 }
 
 // Create bot instance
-const bot = new TelegramBot(token, { polling: false });
+const bot = new TelegramBot(token, { polling: process.env.POLLING_ENABLED === 'true' });
+
+// Enable polling if needed for admin commands
+if (process.env.POLLING_ENABLED === 'true') {
+    bot.on('message', async (msg) => {
+        if (msg.text && msg.text.startsWith('/')) {
+            if (isAdmin(msg.from.id)) {
+                await handleAdminMessage(bot, msg);
+            }
+        }
+    });
+}
 
 // Function to post to channel
 async function postToChannel() {
@@ -57,6 +75,9 @@ async function postToChannel() {
         
         // Save to history
         addToHistory(post);
+        
+        // Track post for analytics
+        trackPost(post);
         
         console.log(`✅ Posted successfully: ${post.type}`);
         console.log(`🎯 Anime: ${post.anime}`);
@@ -99,15 +120,26 @@ async function postToChannel() {
     }
 }
 
-// Main function - just post and finish
+// Main function
 async function main() {
-    console.log(`📢 Posting to: ${channelId}`);
+    console.log(`📢 Posting to: ${channels.join(', ')}`);
     console.log('🎯 Generating amazing content...');
     
-    await postToChannel();
+    // Post immediately if configured
+    if (config.POST_AT_STARTUP) {
+        await postToChannel();
+    }
     
-    console.log('🎉 Post sent successfully!');
-    console.log('✨ Bot finished! You can stop it now.');
+    // Start scheduler if enabled
+    if (config.SCHEDULE_ENABLED) {
+        console.log('\n⏰ Starting automatic scheduler...');
+        startScheduler();
+        console.log('🎉 Bot is now running on schedule!');
+        console.log('✨ Press Ctrl+C to stop the bot.');
+    } else {
+        console.log('🎉 Post sent successfully!');
+        console.log('✨ Bot finished! You can stop it now.');
+    }
 }
 
 // Start the bot immediately
@@ -115,3 +147,6 @@ main().catch(error => {
     console.error('❌ Bot failed:', error.message);
     process.exit(1);
 });
+
+// Export for use in other modules
+module.exports = { bot, postToChannel };

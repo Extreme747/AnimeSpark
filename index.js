@@ -51,7 +51,7 @@ async function postToChannel() {
         if (post.imagePath && fs.existsSync(post.imagePath)) {
             // Send image with caption
             console.log('🖼️ Sending with AI-generated image...');
-            await bot.sendPhoto(channelId, post.imagePath, {
+            await bot.sendPhoto(channels[0], post.imagePath, {
                 caption: post.text,
                 parse_mode: 'MarkdownV2'
             });
@@ -67,7 +67,7 @@ async function postToChannel() {
             
         } else {
             // Send text only
-            await bot.sendMessage(channelId, post.text, {
+            await bot.sendMessage(channels[0], post.text, {
                 parse_mode: 'MarkdownV2',
                 disable_web_page_preview: true
             });
@@ -98,12 +98,12 @@ async function postToChannel() {
             const fallbackPost = await generateAnimePost();
             
             if (fallbackPost.imagePath && fs.existsSync(fallbackPost.imagePath)) {
-                await bot.sendPhoto(channelId, fallbackPost.imagePath, {
+                await bot.sendPhoto(channels[0], fallbackPost.imagePath, {
                     caption: fallbackPost.textHTML,
                     parse_mode: 'HTML'
                 });
             } else {
-                await bot.sendMessage(channelId, fallbackPost.textHTML, {
+                await bot.sendMessage(channels[0], fallbackPost.textHTML, {
                     parse_mode: 'HTML',
                     disable_web_page_preview: true
                 });

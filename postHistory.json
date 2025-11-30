@@ -1,6 +1,15 @@
 {
   "posts": [
     {
+      "id": 1764485691980,
+      "timestamp": "2025-11-30T06:54:51.980Z",
+      "type": "Character Quotes",
+      "anime": "doraemon",
+      "contentKey": "quotes_doraemon_Doraemon_Dorayaki is the best",
+      "preview": "🌟 *Doraemon Quote of the Day\\!*\n\n_\"Dorayaki is the best food in the world\\!\"_\n\n\\- Doraemon \n\n_Dorae",
+      "success": true
+    },
+    {
       "id": 1764485587820,
       "timestamp": "2025-11-30T06:53:07.820Z",
       "type": "Trivia",

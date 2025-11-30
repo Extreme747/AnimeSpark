@@ -1,9 +1,9 @@
 // Bot Configuration
 module.exports = {
-    // Scheduling options
-    SCHEDULE_ENABLED: process.env.SCHEDULE_ENABLED === 'true' || false,
+    // Scheduling options - ENABLED BY DEFAULT FOR RAILWAY
+    SCHEDULE_ENABLED: process.env.SCHEDULE_ENABLED !== 'false', // Auto-post on schedule (set to false to disable)
     POSTING_INTERVAL_HOURS: parseInt(process.env.POSTING_INTERVAL_HOURS) || 4, // Post every 4 hours
-    POST_AT_STARTUP: process.env.POST_AT_STARTUP === 'true' || true, // Post immediately on startup
+    POST_AT_STARTUP: process.env.POST_AT_STARTUP !== 'false' || true, // Post immediately on startup
     
     // Channel configuration (can add multiple channels as array)
     CHANNELS: (process.env.CHANNELS ? process.env.CHANNELS.split(',').map(c => c.trim()) : [process.env.CHANNEL_ID]).filter(Boolean),

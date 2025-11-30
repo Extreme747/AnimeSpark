@@ -1,17 +1,18 @@
 {
-  "totalPosts": 2,
+  "totalPosts": 3,
   "startDate": "2025-11-30T06:52:58.350Z",
   "contentTypeStats": {
     "Trivia": 1,
-    "Character Quotes": 1
+    "Character Quotes": 1,
+    "Poll": 1
   },
   "animeStats": {
     "doraemon": 1,
-    "shinchan": 1
+    "shinchan": 2
   },
-  "lastPostTime": "2025-11-30T06:54:51.981Z",
+  "lastPostTime": "2025-11-30T06:57:39.609Z",
   "dailyStats": {
-    "2025-11-30": 2
+    "2025-11-30": 3
   },
   "topContentTypes": [
     {
@@ -20,6 +21,10 @@
     },
     {
       "type": "Character Quotes",
+      "count": 1
+    },
+    {
+      "type": "Poll",
       "count": 1
     }
   ]

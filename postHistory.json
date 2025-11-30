@@ -1,6 +1,15 @@
 {
   "posts": [
     {
+      "id": 1764485859608,
+      "timestamp": "2025-11-30T06:57:39.608Z",
+      "type": "Poll",
+      "anime": "shinchan",
+      "contentKey": "poll_shinchan_Best Shinchan character?",
+      "preview": "🗳️ *Poll Time\\!* \n\nBest Shinchan character?\n\n1\\) Shinchan\n2\\) Himawari\n3\\) Misae\n4\\) Hiroshi\n\n_Vote",
+      "success": true
+    },
+    {
       "id": 1764485691980,
       "timestamp": "2025-11-30T06:54:51.980Z",
       "type": "Character Quotes",

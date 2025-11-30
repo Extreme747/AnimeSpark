@@ -48,11 +48,40 @@ function addToHistory(postData) {
     return entry;
 }
 
-// Check if content was recently posted
+// Check if content was recently posted - NOW WITH DATE/TIME AWARENESS!
 function wasRecentlyPosted(contentKey, withinLast = 50) {
     const history = getHistory();
     const recentPosts = history.posts.slice(0, withinLast);
-    return recentPosts.some(post => post.contentKey === contentKey);
+    const today = new Date().toISOString().split('T')[0]; // Get today's date (YYYY-MM-DD)
+    
+    // Check if same contentKey posted TODAY (within same date)
+    const postedToday = recentPosts.some(post => {
+        const postDate = post.timestamp.split('T')[0]; // Extract date from ISO timestamp
+        return post.contentKey === contentKey && postDate === today;
+    });
+    
+    return postedToday;
+}
+
+// Get last post time for interval checking
+function getLastPostTime() {
+    const history = getHistory();
+    if (history.posts.length === 0) return null;
+    return new Date(history.posts[0].timestamp);
+}
+
+// Get today's posts count
+function getTodaysPostCount() {
+    const history = getHistory();
+    const today = new Date().toISOString().split('T')[0];
+    return history.posts.filter(post => post.timestamp.split('T')[0] === today).length;
+}
+
+// Get all posts from today with timestamps for display
+function getTodaysPosts() {
+    const history = getHistory();
+    const today = new Date().toISOString().split('T')[0];
+    return history.posts.filter(post => post.timestamp.split('T')[0] === today);
 }
 
 // Get statistics
@@ -90,6 +119,9 @@ module.exports = {
     getHistory,
     addToHistory,
     wasRecentlyPosted,
+    getLastPostTime,
+    getTodaysPostCount,
+    getTodaysPosts,
     getStats,
     trimHistory
 };

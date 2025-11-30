@@ -1,7 +1,7 @@
 require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
 const { generateAnimePost } = require('./postGenerator');
-const { addToHistory } = require('./historyManager');
+const { addToHistory, getLastPostTime, getTodaysPostCount, getTodaysPosts } = require('./historyManager');
 const { trackPost, loadAnalytics, printAnalytics } = require('./analytics');
 const config = require('./config');
 const { startScheduler, stopScheduler } = require('./scheduler');
@@ -45,6 +45,17 @@ if (process.env.POLLING_ENABLED === 'true') {
 // Function to post to channel
 async function postToChannel() {
     try {
+        // Show current date/time and last post info
+        const now = new Date();
+        const todaysPosts = getTodaysPostCount();
+        const lastPostTime = getLastPostTime();
+        
+        console.log(`\n📅 Current Date/Time: ${now.toLocaleString('en-IN')}`);
+        console.log(`📊 Posts today: ${todaysPosts}`);
+        if (lastPostTime) {
+            console.log(`⏱️ Last post: ${lastPostTime.toLocaleString('en-IN')}`);
+        }
+        
         console.log('🎨 Generating AI-powered post...');
         const post = await generateAnimePost();
         

@@ -1,6 +1,7 @@
 const { animeDatabase, getRandomItem, formatDate } = require('./animeData');
 const { enhanceAnimePost, generateAnimeImage, generateImageCaption, generateCustomTrivia } = require('./gemini');
 const { wasRecentlyPosted } = require('./historyManager');
+const { expandedAnimeDatabase, getRandomAnime, getRandomNews, getRandomTrend, getRandomViralTopic } = require('./animeNews');
 const fs = require('fs');
 const path = require('path');
 
@@ -610,26 +611,89 @@ ${escapeHashtagsMarkdownV2(hashtags)}`;
     };
 }
 
-// Smart selection - tries to generate unique content not recently posted
+// Generate trending anime news (NEW)
+async function generateTrendingAnimeNews() {
+    const anime = getRandomAnime();
+    const animeData = expandedAnimeDatabase[anime];
+    const news = getRandomNews(anime);
+    
+    const text = `🌟 *${animeData.title} Update!*\n\n${news}\n\n🔥 Fans are buzzing about this!\n${'─'.repeat(40)}\n#anime #${anime} #trends`;
+    const textHTML = `<b>🌟 ${animeData.title} Update!</b>\n\n${news}\n\n🔥 Fans are buzzing about this!\n${'─'.repeat(40)}\n#anime #${anime} #trends`;
+    
+    return {
+        type: 'Anime News',
+        text: text,
+        textHTML: textHTML,
+        anime: anime,
+        contentKey: `trending_${anime}_${news.substring(0, 30)}`
+    };
+}
+
+// Generate market/industry trends (NEW)
+async function generateMarketTrends() {
+    const trend = getRandomTrend();
+    const topic = getRandomViralTopic();
+    
+    const text = `📊 *Anime Industry Update*\n\n${trend}\n\n💬 ${topic}\n${'─'.repeat(40)}\n#animetrends #market #industry`;
+    const textHTML = `<b>📊 Anime Industry Update</b>\n\n${trend}\n\n💬 ${topic}\n${'─'.repeat(40)}\n#animetrends #market #industry`;
+    
+    return {
+        type: 'Market Trends',
+        text: text,
+        textHTML: textHTML,
+        anime: 'general',
+        contentKey: `market_${trend.substring(0, 30)}`
+    };
+}
+
+// Generate viral anime topic (NEW)
+async function generateViralContent() {
+    const topic = getRandomViralTopic();
+    const anime = getRandomAnime();
+    
+    const text = `🔥 *Viral Right Now*\n\n${topic}\n\n${anime.toUpperCase()}\n${'─'.repeat(40)}\n#viral #trending #anime`;
+    const textHTML = `<b>🔥 Viral Right Now</b>\n\n${topic}\n\n${anime.toUpperCase()}\n${'─'.repeat(40)}\n#viral #trending #anime`;
+    
+    return {
+        type: 'Viral Content',
+        text: text,
+        textHTML: textHTML,
+        anime: anime,
+        contentKey: `viral_${topic.substring(0, 30)}`
+    };
+}
+
+// Smart selection with weighted distribution - tries to generate unique content
 async function generateAnimePost() {
-    const postTypes = [
+    // Original Doraemon/Shinchan posts (50% weight - limited)
+    const classicPostTypes = [
         generateEpisodeSummary,
         generateTrivia,
         generateTodayInHistory,
         generatePoll,
         generateAnimeFacts,
         generateAnimeStories,
-        generateAnimeNews,
         generateCharacterQuotes,
         generateWouldYouRather,
         generateMiniQuiz
     ];
     
+    // NEW: Other anime + market content (50% weight - expanded)
+    const expandedPostTypes = [
+        generateTrendingAnimeNews,      // Popular anime news
+        generateMarketTrends,            // Industry/market trends
+        generateViralContent             // Viral anime topics
+    ];
+    
+    // Weighted selection: 50% classic (Doraemon/Shinchan), 50% new content
+    const useNewContent = Math.random() > 0.5;
+    const selectedPool = useNewContent ? expandedPostTypes : classicPostTypes;
+    
     const maxAttempts = 10;
     let attempts = 0;
     
     while (attempts < maxAttempts) {
-        const randomGenerator = getRandomItem(postTypes);
+        const randomGenerator = getRandomItem(selectedPool);
         const post = await randomGenerator();
         
         // Check if this content was recently posted
@@ -644,7 +708,7 @@ async function generateAnimePost() {
     
     // If all attempts fail, just return the last generated post
     console.log('⚠️ Could not find unique content after 10 attempts, posting anyway');
-    const fallbackGenerator = getRandomItem(postTypes);
+    const fallbackGenerator = useNewContent ? getRandomItem(expandedPostTypes) : getRandomItem(classicPostTypes);
     return await fallbackGenerator();
 }
 
@@ -660,5 +724,8 @@ module.exports = {
     generateCharacterQuotes,
     generateWouldYouRather,
     generateMiniQuiz,
+    generateTrendingAnimeNews,
+    generateMarketTrends,
+    generateViralContent,
     escapeMarkdownV2
 };
